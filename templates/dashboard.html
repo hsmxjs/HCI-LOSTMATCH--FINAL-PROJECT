@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LostMatch | Home</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f4fb;
+            color: #17132e;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 390px;
+            max-width: 100%;
+            min-height: 844px;
+            margin: 30px auto;
+            background: #fff;
+            border: 3px solid #8b83a5;
+            border-radius: 48px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .phone-notch {
+            width: 125px;
+            height: 30px;
+            background: #25212e;
+            border-radius: 25px;
+            margin: 12px auto 0;
+        }
+
+        .content {
+            padding: 24px 20px 105px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .city-select {
+            border: none;
+            background: transparent;
+            color: #17132e;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            max-width: 190px;
+        }
+
+        .location svg {
+            color: #7929c3;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-button {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+            color: #17132e;
+        }
+
+        .notification-dot {
+            position: absolute;
+            right: -3px;
+            top: -3px;
+            width: 11px;
+            height: 11px;
+            background: red;
+            border-radius: 50%;
+        }
+
+        .avatar {
+            width: 43px;
+            height: 43px;
+            background: #8039c4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .welcome {
+            background: linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #f5eaff 75%,
+                #e8d5fa 100%
+            );
+            border-radius: 22px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            padding: 10px 15px 0;
+        }
+
+        .welcome h1 {
+            font-size: 27px;
+            margin: 5px 0 8px;
+        }
+
+        .welcome p {
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .skyline {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .feature-card {
+            min-height: 150px;
+            border-radius: 23px;
+            text-decoration: none;
+            color: #17132e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+            padding: 16px 10px;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-card svg {
+            width: 48px;
+            height: 48px;
+            stroke-width: 2;
+        }
+
+        .feature-card span {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .purple-card {
+            background: linear-gradient(145deg, #f4e9ff, #e9d5fa);
+        }
+
+        .orange-card {
+            background: linear-gradient(145deg, #fff4ed, #ffe1d2);
+        }
+
+        .purple-icon {
+            color: #7b25c5;
+        }
+
+        .orange-icon {
+            color: #ef641c;
+        }
+
+        .matching {
+            margin-top: 20px;
+            padding: 20px 15px;
+            border-radius: 22px;
+            background: linear-gradient(120deg, #f2e6ff, #eee0fa);
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .matching-icon {
+            font-size: 42px;
+            color: #8a28d0;
+        }
+
+        .matching h3 {
+            margin: 0 0 5px;
+            font-size: 17px;
+        }
+
+        .matching p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee5f6;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 5px 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #332c45;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .nav-item svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .nav-item.active {
+            color: #7b25c5;
+            font-weight: bold;
+        }
+
+        @media (max-width: 430px) {
+            .app {
+                width: 100%;
+                min-height: 100vh;
+                margin: 0;
+                border: none;
+                border-radius: 0;
+            }
+
+            .bottom-nav {
+                position: fixed;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="phone-notch"></div>
+
+    <main class="content">
+
+        <!-- Top Bar -->
+        <header class="topbar">
+
+            <div class="location">
+                <svg width="25" height="25"
+                     viewBox="0 0 24 24"
+                     fill="currentColor">
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.5 8 12 8 12s8-6.5 8-12a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                </svg>
+
+                <select id="citySelect" class="city-select">
+                    <option value="Al Jubail">Al Jubail, KSA</option>
+                    <option value="Dammam">Dammam, KSA</option>
+                    <option value="Al Khobar">Al Khobar, KSA</option>
+                    <option value="Riyadh">Riyadh, KSA</option>
+                    <option value="Jeddah">Jeddah, KSA</option>
+                </select>
+            </div>
+
+            <div class="top-actions">
+
+                <button class="icon-button"
+                        type="button"
+                        aria-label="Notifications">
+                    <svg width="27" height="27"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                        <path d="M10 21h4"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="avatar" aria-label="Profile">
+                    <svg width="25" height="25"
+                         viewBox="0 0 24 24"
+                         fill="currentColor">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21c0-5 3-8 8-8s8 3 8 8z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Welcome Banner -->
+        <section class="welcome">
+
+            <div class="welcome-text">
+                <h1>Hi, {{ session.get('user', 'Horyah').split('@')[0].capitalize() }} 👋</h1>
+
+                <p>
+                    Report, find, and track lost items
+                    anywhere in <span id="welcomeCity">Al Jubail</span>.
+                </p>
+            </div>
+
+            <img
+                class="skyline"
+                src="{{ url_for('static', filename='skyline.png') }}"
+                alt="Al Jubail Skyline"
+            >
+
+        </section>
+
+        <!-- Main Features -->
+        <section class="cards">
+
+            <!-- Report Lost Item -->
+            <a href="{{ url_for('select_category', type='lost') }}"
+               class="feature-card purple-card">
+
+                <svg class="purple-icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+                    <path d="M20 12l-8 8-9-9V4h7z"/>
+                    <circle cx="7.5" cy="8" r="1.3"/>
+                </svg>
+
+                <span>Report<br>Lost Item</span>
+            </a>
+
+            <!-- Report Found Item -->
+            <a href="{{ url_for('select_category', type='found') }}"
+               class="feature-card orange-card">
+
+                <svg class="orange-icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+                    <path d="M3 7l9-4 9 4-9 5z"/>
+                    <path d="M3 7v10l9 5 9-5V7"/>
+                    <path d="M12 12v10"/>
+                </svg>
+
+                <span>Report<br>Found Item</span>
+            </a>
+
+            <!-- My Reports -->
+            <a href="{{ url_for('my_reports') }}"
+               class="feature-card purple-card">
+
+                <svg class="purple-icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+                    <rect x="5" y="3"
+                          width="14" height="18" rx="1"/>
+                    <path d="M8 8h8M8 12h8M8 16h6"/>
+                </svg>
+
+                <span>My Reports</span>
+            </a>
+
+            <!-- Find Item -->
+            <a href="{{ url_for('find_item') }}"
+               class="feature-card purple-card">
+
+                <svg class="purple-icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+                    <circle cx="10" cy="10" r="7"/>
+                    <path d="M15 15l6 6"/>
+                </svg>
+
+                <span>Find Item</span>
+            </a>
+
+        </section>
+
+        <!-- Automatic Matching -->
+        <section class="matching">
+            <div class="matching-icon">✦</div>
+
+            <div>
+                <h3>Automatic Matching</h3>
+                <p>
+                    We'll find possible matches
+                    for you automatically.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <!-- Home -->
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-item active">
+
+            <svg viewBox="0 0 24 24"
+                 fill="currentColor">
+                <path d="M3 11L12 3l9 8v10h-7v-7h-4v7H3z"/>
+            </svg>
+
+            Home
+        </a>
+
+        <!-- Reports -->
+        <a href="{{ url_for('my_reports') }}"
+           class="nav-item">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2">
+                <rect x="5" y="3" width="14" height="18"/>
+                <path d="M8 8h8M8 12h8M8 16h6"/>
+            </svg>
+
+            Reports
+        </a>
+
+        <!-- Matches -->
+        <a href="{{ url_for('profile') }}" class="nav-item">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2">
+                <path d="M20 9c0 6-8 12-8 12S4 15 4 9a5 5 0 0 1 8-4 5 5 0 0 1 8 4z"/>
+            </svg>
+
+            Matches
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url_for('my_matches') }}" class="nav-item">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M4 21c0-5 3-8 8-8s8 3 8 8"/>
+            </svg>
+
+            Profile
+        </a>
+
+    </nav>
+
+</div>
+
+<script>
+    const citySelect = document.getElementById("citySelect");
+    const welcomeCity = document.getElementById("welcomeCity");
+
+    citySelect.addEventListener("change", function () {
+        welcomeCity.textContent = this.value;
+    });
+</script>
+
+</body>
+</html>

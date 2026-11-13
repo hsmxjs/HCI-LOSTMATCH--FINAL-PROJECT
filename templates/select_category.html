@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LostMatch | Select Category</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f6f4fb;
+            font-family: Arial, sans-serif;
+            color: #17132e;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 390px;
+            max-width: 100%;
+            min-height: 844px;
+            margin: 30px auto;
+            background: #fcfaff;
+            border: 3px solid #8b83a5;
+            border-radius: 48px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,.15);
+        }
+
+        .phone-notch {
+            width: 125px;
+            height: 30px;
+            background: #25212e;
+            border-radius: 25px;
+            margin: 12px auto 0;
+        }
+
+        .content {
+            padding: 32px 20px 40px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: 750;
+        }
+
+        .back {
+            position: absolute;
+            left: 0;
+            color: #17132e;
+            text-decoration: none;
+            font-size: 34px;
+            line-height: 1;
+        }
+
+        .search {
+            width: 100%;
+            height: 54px;
+            border: 1px solid #ded6ea;
+            border-radius: 17px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+            box-shadow: 0 3px 7px rgba(60,30,100,.06);
+            margin-bottom: 30px;
+        }
+
+        .search svg {
+            width: 23px;
+            height: 23px;
+            color: #51446d;
+            flex-shrink: 0;
+        }
+
+        .search input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            background: transparent;
+            color: #17132e;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px 10px;
+        }
+
+        .category {
+            min-width: 0;
+            min-height: 135px;
+            border: 1px solid #eee8f7;
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(77,48,122,.10);
+            padding: 16px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            color: #17132e;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+            transition: .2s;
+        }
+
+        .category:hover,
+        .category:focus-visible {
+            background: #f5eaff;
+            border-color: #8a36cb;
+            transform: translateY(-2px);
+        }
+
+        .category svg {
+            width: 44px;
+            height: 44px;
+            fill: none;
+            stroke: #7c2bc1;
+            stroke-width: 1.9;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .category span {
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        .empty {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            color: #756b80;
+            font-size: 14px;
+        }
+
+        @media (max-width: 430px) {
+            .app {
+                width: 100%;
+                min-height: 100vh;
+                margin: 0;
+                border: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="phone-notch"></div>
+
+    <main class="content">
+        <header class="header">
+            <a class="back"
+               href="{{ url_for('dashboard') }}"
+               aria-label="Back to Home">‹</a>
+            <h1>Select Category</h1>
+        </header>
+
+        <div class="search">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+                <circle cx="10.5" cy="10.5" r="6.5"/>
+                <path d="m16 16 5 5"/>
+            </svg>
+            <input type="search" id="searchInput"
+                   placeholder="Search a category..."
+                   aria-label="Search categories">
+        </div>
+
+        <section class="categories" id="categories">
+
+            <button class="category" data-name="Electronics"
+                    onclick="chooseCategory('Electronics')">
+                <svg viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="16" height="12" rx="1"/>
+                    <path d="M2 20h20l-2-4H4z"/>
+                </svg>
+                <span>Electronics</span>
+            </button>
+
+            <button class="category" data-name="Bags & Wallets"
+                    onclick="chooseCategory('Bags & Wallets')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 8h16v13H4z"/>
+                    <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+                </svg>
+                <span>Bags &amp; Wallets</span>
+            </button>
+
+            <button class="category" data-name="IDs & Cards"
+                    onclick="chooseCategory('IDs & Cards')">
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="2"/>
+                    <path d="M2 9h20"/>
+                    <rect x="5" y="12" width="5" height="4" rx="1"/>
+                    <path d="M14 13h5M14 16h4"/>
+                </svg>
+                <span>IDs &amp; Cards</span>
+            </button>
+
+            <button class="category" data-name="Accessories"
+                    onclick="chooseCategory('Accessories')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 14v-3a8 8 0 0 1 16 0v3"/>
+                    <rect x="2" y="13" width="4" height="8" rx="2"/>
+                    <rect x="18" y="13" width="4" height="8" rx="2"/>
+                </svg>
+                <span>Accessories</span>
+            </button>
+
+            <button class="category" data-name="Clothing"
+                    onclick="chooseCategory('Clothing')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8 3 3 7l-2 5 5 2 2-3v10h8V11l2 3 5-2-2-5-5-4-4 3z"/>
+                </svg>
+                <span>Clothing</span>
+            </button>
+
+            <button class="category" data-name="Books & Stationery"
+                    onclick="chooseCategory('Books & Stationery')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 3h14v18H5z"/>
+                    <path d="M8 3v18M5 18h14"/>
+                </svg>
+                <span>Books &amp;<br>Stationery</span>
+            </button>
+
+            <button class="category" data-name="Keys"
+                    onclick="chooseCategory('Keys')">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="16" cy="8" r="5"/>
+                    <path d="m12.5 11.5-10 10H6l2-2v-3h3l3-3"/>
+                    <circle cx="17" cy="7" r="1"/>
+                </svg>
+                <span>Keys</span>
+            </button>
+
+            <button class="category" data-name="Mugs"
+                    onclick="chooseCategory('Mugs')">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 5h13v10a6.5 6.5 0 0 1-13 0z"/>
+                    <path d="M17 7h2a3 3 0 0 1 0 6h-2"/>
+                </svg>
+                <span>Mugs</span>
+            </button>
+
+            <button class="category" data-name="Others"
+                    onclick="chooseCategory('Others')">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="5" cy="12" r="1.5" fill="#7c2bc1"/>
+                    <circle cx="12" cy="12" r="1.5" fill="#7c2bc1"/>
+                    <circle cx="19" cy="12" r="1.5" fill="#7c2bc1"/>
+                </svg>
+                <span>Others</span>
+            </button>
+
+        </section>
+
+        <p class="empty" id="emptyMessage">
+            No categories found.
+        </p>
+    </main>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const reportType = params.get("type");
+
+    function chooseCategory(category) {
+        if (reportType !== "lost" && reportType !== "found") {
+            alert("Please select Lost or Found from Home.");
+            window.location.href = "{{ url_for('dashboard') }}";
+            return;
+        }
+
+        // Save the choice for the upcoming report form.
+        sessionStorage.setItem("report_type", reportType);
+        sessionStorage.setItem("report_category", category);
+
+        
+     window.location.href =
+        "{{ url_for('report_form') }}" +
+        "?type=" + encodeURIComponent(reportType) +
+        "&category=" + encodeURIComponent(category);
+
+    }
+
+    const searchInput = document.getElementById("searchInput");
+    const categoryButtons = document.querySelectorAll(".category");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        let visible = 0;
+
+        categoryButtons.forEach(function (button) {
+            const name = button.dataset.name.toLowerCase();
+            const matches = name.includes(query);
+
+            button.style.display = matches ? "flex" : "none";
+            if (matches) visible++;
+        });
+
+        emptyMessage.style.display = visible ? "none" : "block";
+    });
+</script>
+</body>
+</html>

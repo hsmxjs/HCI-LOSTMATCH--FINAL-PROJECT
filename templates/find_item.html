@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | Find Item</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 25px 22px 40px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    text-decoration: none;
+    color: #17132e;
+}
+
+.tabs {
+    display: flex;
+    padding: 4px;
+    border: 1px solid #e4d9ef;
+    border-radius: 19px;
+    background: #f8f5fc;
+    margin-bottom: 32px;
+}
+
+.tab {
+    flex: 1;
+    border: none;
+    border-radius: 15px;
+    padding: 14px 5px;
+    font-size: 14px;
+    font-weight: bold;
+    background: transparent;
+    color: #241538;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+    color: white;
+    box-shadow: 0 3px 7px rgba(97,36,156,.2);
+}
+
+.field {
+    margin-bottom: 24px;
+}
+
+.field label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 9px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    height: 52px;
+    border: 1px solid #dcd3eb;
+    border-radius: 15px;
+    padding: 0 15px;
+    background: white;
+    font-size: 14px;
+    color: #17132e;
+    outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: #8b35ca;
+    box-shadow: 0 0 0 3px #eee2fa;
+}
+
+.date-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-row input {
+    width: 0;
+    min-width: 0;
+    flex: 1;
+    padding: 0 7px;
+    font-size: 12px;
+}
+
+.date-arrow {
+    font-size: 22px;
+    color: #51446d;
+}
+
+.search-button {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    margin-top: 12px;
+    border-radius: 20px;
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background: #753ab5;
+}
+
+.auto-panel {
+    display: none;
+    text-align: center;
+    padding: 35px 15px;
+    border-radius: 20px;
+    background: #f3eafa;
+}
+
+.auto-panel .sparkle {
+    font-size: 44px;
+    color: #8a28d0;
+}
+
+.auto-panel h2 {
+    font-size: 21px;
+    margin: 12px 0;
+}
+
+.auto-panel p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #62556e;
+}
+
+.message {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #f1e6fb;
+    color: #61249c;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="phone-notch"></div>
+
+<main class="content">
+
+    <header class="header">
+        <a class="back"
+           href="{{ url_for('dashboard') }}"
+           aria-label="Back to Home">‹</a>
+        <h1>Find Item</h1>
+    </header>
+
+    <!-- Search / Automatic Match -->
+    <div class="tabs">
+        <button type="button"
+                class="tab active"
+                id="searchTab">
+            Search
+        </button>
+
+        <button type="button"
+                class="tab"
+                id="autoTab">
+            Automatic Match
+        </button>
+    </div>
+
+    <!-- Search Form -->
+    <section id="searchPanel">
+
+        <form id="searchForm">
+
+            <div class="field">
+                <label for="keyword">Keyword</label>
+                <input type="text"
+                       id="keyword"
+                       placeholder="e.g., Wallet, Key, Laptop">
+            </div>
+
+            <div class="field">
+                <label for="category">Category</label>
+                <select id="category">
+                    <option value="">All Categories</option>
+                    <option>Electronics</option>
+                    <option>Bags &amp; Wallets</option>
+                    <option>IDs &amp; Cards</option>
+                    <option>Accessories</option>
+                    <option>Clothing</option>
+                    <option>Books &amp; Stationery</option>
+                    <option>Keys</option>
+                    <option>Mugs</option>
+                    <option>Others</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="location">Location</label>
+               
+            <select id="location">
+                <option value="">All Locations</option>
+                <option value="Al Jubail">Al Jubail</option>
+                <option value="Dammam">Dammam</option>
+                <option value="Al Khobar">Al Khobar</option>
+                <option value="Riyadh">Riyadh</option>
+                <option value="Jeddah">Jeddah</option>
+            </select>
+
+            </div>
+
+            <div class="field">
+                <label>Date Range</label>
+
+                <div class="date-row">
+                    <input type="date" id="dateFrom"
+                           aria-label="From date">
+                    <span class="date-arrow">→</span>
+                    <input type="date" id="dateTo"
+                           aria-label="To date">
+                </div>
+            </div>
+
+            <button type="submit" class="search-button">
+                Search
+            </button>
+
+        </form>
+
+        <div class="message" id="searchMessage" hidden></div>
+
+    </section>
+
+    <!-- Automatic Matching -->
+    <section class="auto-panel" id="autoPanel">
+
+        <div class="sparkle">✦</div>
+
+        <h2>Automatic Matching</h2>
+
+        <p>
+            LostMatch will automatically suggest
+            possible matches based on your
+            reported lost or found items.
+        </p>
+
+        <div class="message">
+            Automatic matching will be activated
+            when report storage is connected.
+        </div>
+
+    </section>
+
+</main>
+</div>
+
+<script>
+const searchTab = document.getElementById("searchTab");
+const autoTab = document.getElementById("autoTab");
+
+const searchPanel = document.getElementById("searchPanel");
+const autoPanel = document.getElementById("autoPanel");
+
+searchTab.addEventListener("click", () => {
+    searchTab.classList.add("active");
+    autoTab.classList.remove("active");
+
+    searchPanel.style.display = "block";
+    autoPanel.style.display = "none";
+});
+
+autoTab.addEventListener("click", () => {
+    autoTab.classList.add("active");
+    searchTab.classList.remove("active");
+
+    searchPanel.style.display = "none";
+    autoPanel.style.display = "block";
+});
+
+
+document.getElementById("searchForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const keyword = document.getElementById("keyword").value.trim();
+    const category = document.getElementById("category").value;
+    const location = document.getElementById("location").value;
+    const from = document.getElementById("dateFrom").value;
+    const to = document.getElementById("dateTo").value;
+
+    if (from && to && from > to) {
+        const message = document.getElementById("searchMessage");
+        message.hidden = false;
+        message.textContent =
+            "The start date cannot be after the end date.";
+        return;
+    }
+
+    const params = new URLSearchParams();
+
+    if (keyword) params.set("keyword", keyword);
+    if (category) params.set("category", category);
+    if (location) params.set("location", location);
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+
+    window.location.href =
+        "{{ url_for('find_results') }}?" + params.toString();
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | Report Details</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 25px 23px 40px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+.header h1 {
+    font-size: 23px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    color: #17132e;
+    text-decoration: none;
+}
+
+.item-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e8e0ef;
+    margin-bottom: 20px;
+}
+
+.item-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 18px;
+    object-fit: cover;
+    background: #eee8f5;
+    flex-shrink: 0;
+}
+
+.no-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 18px;
+    background: #eee8f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #80728c;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.item-info {
+    min-width: 0;
+}
+
+.item-info h2 {
+    font-size: 22px;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+}
+
+.status {
+    display: inline-block;
+    padding: 9px 22px;
+    border-radius: 22px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.searching {
+    background: #ffeadf;
+    color: #b44c17;
+}
+
+.matched {
+    background: #d5f5dd;
+    color: #217341;
+}
+
+.closed {
+    background: #ffe1e1;
+    color: #d52d35;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 26px 115px minmax(0,1fr);
+    gap: 10px;
+    align-items: start;
+    font-size: 14px;
+}
+
+.detail-row svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #17132e;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.detail-label {
+    font-weight: bold;
+}
+
+.detail-value {
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+.description-row {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.description-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.description-heading svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #17132e;
+    stroke-width: 2;
+}
+
+.description-text {
+    margin: 0 0 0 36px;
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 36px;
+}
+
+.action-button {
+    width: 100%;
+    min-height: 55px;
+    border-radius: 15px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.action-button svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.3;
+}
+
+.edit-button {
+    border: 2px solid #a35bd5;
+    color: #742bb2;
+}
+
+.close-button {
+    border: 2px solid #dc8a3e;
+    color: #a75a17;
+}
+
+.delete-button {
+    border: 2px solid #f0757c;
+    color: #e12935;
+    background: #fff3f3;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+    <div class="phone-notch"></div>
+
+    <main class="content">
+        <header class="header">
+            <a class="back"
+               href="{{ url_for('my_reports', type=report.report_type) }}"
+               aria-label="Back to My Reports">‹</a>
+            <h1>Report Details</h1>
+        </header>
+
+        <section class="item-summary">
+            {% if report.photos %}
+                <img class="item-photo"
+                     src="{{ report.photos[0] }}"
+                     alt="{{ report.item_name }}">
+            {% else %}
+                <div class="no-photo">No Photo</div>
+            {% endif %}
+
+            <div class="item-info">
+                <h2>{{ report.item_name }}</h2>
+                <span class="status {{ report.status | lower }}">
+                    {{ report.status }}
+                </span>
+            </div>
+        </section>
+
+        <section class="details">
+
+            <div class="detail-row">
+                <svg viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="16" height="16" rx="3"/>
+                </svg>
+                <span class="detail-label">Category</span>
+                <span class="detail-value">{{ report.category }}</span>
+            </div>
+
+            <div class="detail-row">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                </svg>
+                <span class="detail-label">Color</span>
+                <span class="detail-value">
+                    {{ report.color or 'Not specified' }}
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14z"/>
+                    <circle cx="12" cy="8" r="3"/>
+                </svg>
+                <span class="detail-label">
+                    {{ 'Last Seen' if report.report_type == 'lost' else 'Found At' }}
+                </span>
+                <span class="detail-value">{{ report.location }}</span>
+            </div>
+
+            <div class="detail-row">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="16" rx="2"/>
+                    <path d="M7 2v6M17 2v6M3 10h18"/>
+                </svg>
+                <span class="detail-label">
+                    {{ 'Date Lost' if report.report_type == 'lost' else 'Date Found' }}
+                </span>
+                <span class="detail-value" id="reportDate">
+                    {{ report.report_date }}
+                </span>
+            </div>
+
+            <div class="description-row">
+                <div class="description-heading">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 2h10l4 4v16H5z"/>
+                        <path d="M14 2v5h5M8 12h8M8 16h6"/>
+                    </svg>
+                    Description
+                </div>
+
+                <p class="description-text">
+                    {{ report.description or 'No description provided.' }}
+                </p>
+            </div>
+
+        </section>
+
+        <div class="actions">
+
+            <a class="action-button edit-button"
+               href="{{ url_for('edit_report', report_id=report.id) }}">
+                ✎ Edit Report
+            </a>
+
+            {% if report.status != 'Closed' %}
+            <form method="POST"
+                  action="{{ url_for('close_report', report_id=report.id) }}"
+                  onsubmit="return confirm('Are you sure you want to close this report?');">
+                <button type="submit"
+                        class="action-button close-button">
+                    ✓ Close Report
+                </button>
+            </form>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ url_for('delete_report', report_id=report.id) }}"
+                  onsubmit="return confirm('Delete this report permanently?');">
+                <button type="submit"
+                        class="action-button delete-button">
+                    🗑 Delete Report
+                </button>
+            </form>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const dateElement = document.getElementById("reportDate");
+const dateValue = new Date(dateElement.textContent.trim() + "T00:00:00");
+
+if (!isNaN(dateValue.getTime())) {
+    dateElement.textContent = dateValue.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+</script>
+</body>
+</html>

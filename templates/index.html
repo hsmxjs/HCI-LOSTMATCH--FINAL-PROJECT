@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LostMatch | Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f4fb;
+            color: #241538;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* iPhone Frame */
+        .app {
+            width: 390px;
+            max-width: 100%;
+            min-height: 844px;
+            margin: 30px auto;
+            background: white;
+            border: 3px solid #8b83a5;
+            border-radius: 48px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Dynamic Island */
+        .phone-notch {
+            width: 125px;
+            height: 30px;
+            background: #25212e;
+            border-radius: 25px;
+            margin: 12px auto 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Branding */
+        .hero {
+            background: #f3ebff;
+            text-align: center;
+            padding-top: 35px;
+            overflow: hidden;
+        }
+
+        .brand-logo {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .logo {
+            color: #4b1687;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #241538;
+            margin: 12px 0 18px;
+        }
+
+        .city {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .city img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Login Form */
+        .form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 25px 24px 35px;
+        }
+
+        .form label {
+            display: block;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #241538;
+        }
+
+        .form input {
+            display: block;
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 1px solid #ded6ea;
+            border-radius: 16px;
+            font-size: 14px;
+            background: white;
+            margin-bottom: 18px;
+            outline: none;
+        }
+
+        .form input:focus {
+            border-color: #8644c4;
+            box-shadow: 0 0 0 3px #eee2fa;
+        }
+
+        /* Forgot Password */
+        .forgot {
+            display: block;
+            width: 100%;
+            text-align: right;
+            margin-bottom: 20px;
+            color: #753ab5;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .login {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(
+                180deg,
+                #a45bd6,
+                #61249c
+            );
+            color: white;
+            border: none;
+            border-radius: 22px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login:hover {
+            background: #753ab5;
+        }
+
+        /* Divider */
+        .or {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 22px 0;
+            font-weight: bold;
+            color: #241538;
+        }
+
+        .or::before,
+        .or::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ded6e9;
+        }
+
+        /* Sign Up Link */
+        .signup {
+            display: block;
+            width: 100%;
+            background: #f3edfa;
+            border: 1px solid #e5d9f2;
+            border-radius: 20px;
+            padding: 16px;
+            color: #61249c;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .signup:hover {
+            background: #e8d8f8;
+        }
+
+        /* Error Message */
+        .error {
+            color: #c62828;
+            background: #fff0f0;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Mobile Screens */
+        @media (max-width: 430px) {
+            .app {
+                width: 100%;
+                margin: 0 auto;
+                min-height: 100vh;
+                border: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Dynamic Island -->
+        <div class="phone-notch"></div>
+
+        <!-- Branding -->
+        <section class="hero">
+
+            <img
+                class="brand-logo"
+                src="{{ url_for('static', filename='logo.png') }}"
+                alt="LostMatch Logo"
+            >
+
+            <h1 class="logo">LostMatch</h1>
+
+            <p class="subtitle">
+                Lost &amp; Found Across the City
+            </p>
+
+            <div class="city">
+                <img
+                    src="{{ url_for('static', filename='skyline.png') }}"
+                    alt="City Skyline"
+                >
+            </div>
+
+        </section>
+
+        <!-- Login Form -->
+        <form class="form" action="{{ url_for('login') }}" method="POST">
+
+            <label for="contact">
+                Email OR Phone number
+            </label>
+
+            <input
+                id="contact"
+                name="contact"
+                type="text"
+                placeholder="Enter your email OR phone number"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <!-- Forgot Password Link -->
+            <a
+                class="forgot"
+                href="{{ url_for('forgot_password') }}"
+            >
+                Forgot Password?
+            </a>
+
+            <!-- Error Message -->
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <!-- Login Button -->
+            <button class="login" type="submit">
+                Log In
+            </button>
+
+            <!-- Divider -->
+            <div class="or">or</div>
+
+            <!-- Sign Up Link -->
+            <a
+                href="{{ url_for('signup') }}"
+                class="signup"
+            >
+                Don't have an account? Sign Up
+            </a>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | Match Details</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 25px 22px 45px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+.header h1 {
+    font-size: 23px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    color: #17132e;
+    text-decoration: none;
+}
+
+.item-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e9e2f1;
+}
+
+.item-image, .no-photo {
+    width: 115px;
+    height: 115px;
+    border-radius: 18px;
+    background: #eee7f5;
+    flex-shrink: 0;
+}
+
+.item-image {
+    object-fit: cover;
+}
+
+.no-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #82758f;
+    font-size: 13px;
+}
+
+.item-info {
+    min-width: 0;
+}
+
+.item-info h2 {
+    font-size: 21px;
+    margin: 0 0 12px;
+}
+
+.match-badge {
+    display: inline-block;
+    background: #efe1fa;
+    color: #7b25c5;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.details {
+    padding-top: 24px;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 27px 100px 1fr;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 27px;
+    font-size: 14px;
+}
+
+.detail-icon {
+    font-size: 21px;
+    color: #282035;
+}
+
+.detail-label {
+    font-weight: bold;
+}
+
+.detail-value {
+    color: #30263e;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.description {
+    margin-top: 8px;
+    line-height: 1.7;
+}
+
+.actions {
+    margin-top: 55px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 17px;
+    font-size: 17px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.claim {
+    border: none;
+    color: white;
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+}
+
+.not-mine {
+    background: transparent;
+    border: 2px solid #a65ed6;
+    color: #7b25c5;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <div class="phone-notch"></div>
+
+    <main class="content">
+
+        <header class="header">
+            <a href="{{ url_for('my_matches') }}"
+               class="back">‹</a>
+            <h1>Match Details</h1>
+        </header>
+
+        <section class="item-summary">
+
+            {% if match.image %}
+                <img class="item-image"
+                     src="{{ match.image }}"
+                     alt="{{ match.name }}">
+            {% else %}
+                <div class="no-photo">No Photo</div>
+            {% endif %}
+
+            <div class="item-info">
+                <h2>{{ match.name }}</h2>
+                <span class="match-badge">
+                    {{ match.score }}% Match
+                </span>
+            </div>
+
+        </section>
+
+        <section class="details">
+
+            <div class="detail-row">
+                <span class="detail-icon">⌖</span>
+                <span class="detail-label">Found Location</span>
+                <span class="detail-value">{{ match.location }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-icon">▣</span>
+                <span class="detail-label">Date Found</span>
+                <span class="detail-value">{{ match.date }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-icon">◯</span>
+                <span class="detail-label">Color</span>
+                <span class="detail-value">{{ match.color }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-icon">▤</span>
+                <span class="detail-label">Description</span>
+                <span class="detail-value">
+                    {{ match.description }}
+                </span>
+            </div>
+
+        </section>
+
+        <div class="actions">
+            <button class="btn claim" type="button"
+                    onclick="alert('Claim Request page will be connected next.')">
+                Request Claim
+            </button>
+
+            <button class="btn not-mine" type="button"
+                    onclick="notMine()">
+                Report as Not Mine
+            </button>
+        </div>
+
+    </main>
+</div>
+
+<script>
+function notMine() {
+    const confirmed = confirm(
+        "Are you sure this item is not yours?"
+    );
+
+    if (confirmed) {
+        alert("This demo match has been marked as Not Mine.");
+        window.location.href = "{{ url_for('my_matches') }}";
+    }
+}
+</script>
+
+</body>
+</html>

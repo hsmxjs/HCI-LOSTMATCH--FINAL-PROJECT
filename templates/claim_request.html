@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | Claim Request</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 25px 22px 40px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+.header h1 {
+    font-size: 23px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    color: #17132e;
+    text-decoration: none;
+}
+
+.item-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 40px;
+}
+
+.item-image,
+.no-photo {
+    width: 115px;
+    height: 115px;
+    border-radius: 18px;
+    background: #eee7f5;
+    flex-shrink: 0;
+}
+
+.item-image {
+    object-fit: cover;
+}
+
+.no-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #82758f;
+    font-size: 13px;
+}
+
+.item-info {
+    min-width: 0;
+}
+
+.item-info h2 {
+    font-size: 21px;
+    margin: 0 0 12px;
+}
+
+.match-badge {
+    display: inline-block;
+    background: #efe1fa;
+    color: #7b25c5;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-label {
+    display: block;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.required {
+    color: #e52b38;
+}
+
+.message-box {
+    width: 100%;
+    height: 165px;
+    padding: 15px;
+    border: 1.5px solid #dcd3eb;
+    border-radius: 17px;
+    background: white;
+    font-size: 15px;
+    font-family: inherit;
+    color: #17132e;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+}
+
+.message-box:focus {
+    border-color: #8b35ca;
+    box-shadow: 0 0 0 3px #eee2fa;
+}
+
+.counter {
+    text-align: right;
+    color: #51475f;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.send-btn {
+    width: 100%;
+    border: none;
+    padding: 17px;
+    border-radius: 19px;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+    cursor: pointer;
+    margin-top: 110px;
+}
+
+.send-btn:hover {
+    background: #753ab5;
+}
+
+.notice {
+    padding: 15px;
+    border-radius: 15px;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.success {
+    background: #eee1fa;
+    color: #61249c;
+}
+
+.error {
+    background: #ffe5e8;
+    color: #b42332;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <div class="phone-notch"></div>
+
+    <main class="content">
+
+        <header class="header">
+            <a href="{{ url_for('match_details', match_id=match.id) }}"
+               class="back">‹</a>
+            <h1>Claim Request</h1>
+        </header>
+
+        <section class="item-summary">
+
+            {% if match.image %}
+                <img class="item-image"
+                     src="{{ match.image }}"
+                     alt="{{ match.name }}">
+            {% else %}
+                <div class="no-photo">No Photo</div>
+            {% endif %}
+
+            <div class="item-info">
+                <h2>{{ match.name }}</h2>
+                <span class="match-badge">
+                    {{ match.score }}% Match
+                </span>
+            </div>
+
+        </section>
+
+        {% if sent %}
+
+            <div class="notice success">
+                Request saved successfully!
+                Your claim request has been recorded.
+            </div>
+
+            <a href="{{ url_for('my_matches') }}"
+               style="color:#7b25c5;font-weight:bold;">
+                Back to My Matches
+            </a>
+
+        {% else %}
+
+            <form method="POST"
+                  action="{{ url_for('claim_request', match_id=match.id) }}">
+
+                <label for="message" class="form-label">
+                    Message to Finder
+                    <span class="required">*</span>
+                </label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    class="message-box"
+                    maxlength="300"
+                    required
+                    placeholder="Hi, I believe this item belongs to me. Could you please confirm?"
+                >{{ draft or '' }}</textarea>
+
+                <div class="counter">
+                    <span id="charCount">0</span>/300
+                </div>
+
+                {% if error %}
+                    <div class="notice error">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="send-btn">
+                    Send Request
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </main>
+</div>
+
+<script>
+const messageBox = document.getElementById("message");
+const charCount = document.getElementById("charCount");
+
+if (messageBox && charCount) {
+    function updateCounter() {
+        charCount.textContent = messageBox.value.length;
+    }
+
+    messageBox.addEventListener("input", updateCounter);
+    updateCounter();
+}
+</script>
+
+</body>
+</html>

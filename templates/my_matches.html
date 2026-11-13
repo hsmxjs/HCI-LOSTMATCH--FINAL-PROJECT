@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | My Matches</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 25px 18px 115px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    color: #17132e;
+    text-decoration: none;
+}
+
+.tabs {
+    display: flex;
+    padding: 4px;
+    background: #f8f5fc;
+    border: 1px solid #e4d9ef;
+    border-radius: 18px;
+    margin-bottom: 22px;
+}
+
+.tab {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 4px;
+    border: none;
+    border-radius: 15px;
+    background: transparent;
+    color: #241538;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tab.active {
+    color: white;
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+}
+
+.demo-label {
+    text-align: center;
+    color: #7b25c5;
+    font-size: 12px;
+    margin: -8px 0 18px;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.match-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    background: #f8f4fc;
+    border: 1px solid #eee7f7;
+    border-radius: 23px;
+    box-shadow: 0 3px 8px rgba(78,42,115,.08);
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+}
+
+.match-card:hover {
+    background: #f0e7fa;
+}
+
+.match-image, .no-photo {
+    width: 94px;
+    height: 94px;
+    border-radius: 15px;
+    flex-shrink: 0;
+    background: #eae2f1;
+}
+
+.match-image {
+    object-fit: cover;
+}
+
+.no-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #80728c;
+    font-size: 12px;
+    text-align: center;
+}
+
+.match-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.match-info h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    overflow-wrap: anywhere;
+}
+
+.match-score {
+    color: #7b25c5;
+    font-size: 17px;
+    font-weight: bold;
+    margin: 0 0 7px;
+}
+
+.match-date {
+    color: #5b5267;
+    font-size: 13px;
+    margin: 0;
+}
+
+.arrow {
+    font-size: 30px;
+    flex-shrink: 0;
+}
+
+.empty {
+    text-align: center;
+    padding: 45px 12px;
+    color: #756b80;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #eee5f6;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 5px 20px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #332c45;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.nav-item svg {
+    width: 25px;
+    height: 25px;
+}
+
+.nav-item.active {
+    color: #7b25c5;
+    font-weight: bold;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+
+    .bottom-nav {
+        position: fixed;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <div class="phone-notch"></div>
+
+    <main class="content">
+
+        <header class="header">
+            <a class="back"
+               href="{{ url_for('dashboard') }}"
+               aria-label="Back to Home">‹</a>
+            <h1>My Matches</h1>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active"
+                    id="lostTab" type="button">
+                Lost Item Matches ({{ matches.lost | length }})
+            </button>
+
+            <button class="tab"
+                    id="foundTab" type="button">
+                Found Item Matches ({{ matches.found | length }})
+            </button>
+        </div>
+
+        {% if demo_mode %}
+        <p class="demo-label">
+            Demo results for prototype testing
+        </p>
+        {% endif %}
+
+        <section class="matches-list"
+                 id="matchesList"></section>
+
+    </main>
+
+    <nav class="bottom-nav">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-item">
+            <svg viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor"
+                 stroke-width="2">
+                <path d="M3 11L12 3l9 8v10h-7v-7h-4v7H3z"/>
+            </svg>
+            Home
+        </a>
+
+        <a href="{{ url_for('my_reports') }}"
+           class="nav-item">
+            <svg viewBox="0 0 24 24"
+                 fill="currentColor">
+                <rect x="5" y="3" width="14" height="18" rx="2"/>
+                <path d="M8 8h8M8 12h8M8 16h6"
+                      stroke="white" stroke-width="1.5"/>
+            </svg>
+            Reports
+        </a>
+
+        <a href="{{ url_for('my_matches') }}"
+           class="nav-item active">
+            <svg viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor"
+                 stroke-width="2">
+                <path d="M20 9c0 6-8 12-8 12S4 15 4 9a5 5 0 0 1 8-4 5 5 0 0 1 8 4z"/>
+            </svg>
+            Matches
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="nav-item">
+            <svg viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor"
+                 stroke-width="2">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M4 21c0-5 3-8 8-8s8 3 8 8"/>
+            </svg>
+            Profile
+        </a>
+
+    </nav>
+</div>
+
+<script id="matchesData" type="application/json">
+    {{ matches | tojson }}
+</script>
+
+<script>
+const matches = JSON.parse(
+    document.getElementById("matchesData").textContent
+);
+
+const lostTab = document.getElementById("lostTab");
+const foundTab = document.getElementById("foundTab");
+const matchesList = document.getElementById("matchesList");
+
+function renderMatches(type) {
+    lostTab.classList.toggle("active", type === "lost");
+    foundTab.classList.toggle("active", type === "found");
+
+    matchesList.innerHTML = "";
+
+    if (matches[type].length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No possible matches found yet.";
+        matchesList.appendChild(empty);
+        return;
+    }
+
+    matches[type].forEach(match => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "match-card";
+
+        let photo;
+
+        if (match.image) {
+            photo = document.createElement("img");
+            photo.className = "match-image";
+            photo.src = match.image;
+            photo.alt = match.name;
+        } else {
+            photo = document.createElement("div");
+            photo.className = "no-photo";
+            photo.textContent = "No Photo";
+        }
+
+        const info = document.createElement("div");
+        info.className = "match-info";
+
+        const name = document.createElement("h3");
+        name.textContent = match.name;
+
+        const score = document.createElement("p");
+        score.className = "match-score";
+        score.textContent = match.score + "% Match";
+
+        const date = document.createElement("p");
+        date.className = "match-date";
+
+        const dateValue = new Date(match.date + "T00:00:00");
+
+        const formattedDate = isNaN(dateValue.getTime())
+            ? match.date
+            : dateValue.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            });
+
+        date.textContent =
+            (type === "lost" ? "Found on " : "Lost on ") +
+            formattedDate;
+
+        const arrow = document.createElement("span");
+        arrow.className = "arrow";
+        arrow.textContent = "›";
+
+        info.append(name, score, date);
+        card.append(photo, info, arrow);
+
+        card.addEventListener("click", () => {
+            window.location.href = "/match-details/" + match.id;
+        });
+
+        matchesList.appendChild(card);
+    });
+}
+
+lostTab.addEventListener("click", () => renderMatches("lost"));
+foundTab.addEventListener("click", () => renderMatches("found"));
+
+renderMatches("lost");
+</script>
+
+</body>
+</html>

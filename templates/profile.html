@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | LostMatch</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f0f8;
+            color: #292238;
+        }
+
+        .phone {
+            max-width: 390px;
+            min-height: 100vh;
+            margin: auto;
+            background: #faf9fe;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            height: 75px;
+            background: white;
+            padding: 25px 22px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .settings {
+            background: none;
+            border: none;
+            font-size: 25px;
+            cursor: pointer;
+            color: #45325c;
+        }
+
+        .identity {
+            text-align: center;
+            padding: 30px 20px 25px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                #7951d6,
+                #aa80ee
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .identity h2 {
+            font-size: 21px;
+            margin: 0 0 8px;
+        }
+
+        .identity p {
+            font-size: 13px;
+            color: #918b9d;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .menu {
+            margin: 10px 20px 25px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(65, 41, 95, 0.05);
+        }
+
+        .menu-item {
+            width: 100%;
+            min-height: 65px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            border: none;
+            border-bottom: 1px solid #f1edf6;
+            text-decoration: none;
+            color: #302a40;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: #faf7ff;
+        }
+
+        .menu-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: #f3edff;
+            color: #895bd7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .arrow {
+            margin-left: auto;
+            font-size: 24px;
+            color: #b4aabc;
+            font-weight: normal;
+        }
+
+        .logout {
+            margin: 10px 20px;
+            width: calc(100% - 40px);
+            height: 52px;
+            border: 1.5px solid #f0a0a7;
+            border-radius: 14px;
+            background: white;
+            color: #db5364;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .notice {
+            margin: 10px 20px;
+            padding: 12px;
+            background: #f3edff;
+            color: #6449a0;
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 78px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            align-items: center;
+            background: white;
+            border-top: 1px solid #eeeaf5;
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #aaa3b5;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 23px;
+        }
+
+        .nav-link.active {
+            color: #8658d6;
+        }
+
+        @media (min-width: 500px) {
+            .phone {
+                min-height: 844px;
+                margin: 30px auto;
+                border-radius: 28px;
+                overflow: hidden;
+                box-shadow: 0 0 25px rgba(36, 20, 70, 0.08);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="phone">
+
+    <header class="header">
+        <h1>Profile</h1>
+
+        <button
+            class="settings"
+            type="button"
+            onclick="showNotice('Settings will be available soon.')"
+            aria-label="Settings">
+            ⚙
+        </button>
+    </header>
+
+    {% set contact = session.get('user', 'horyah@iau.edu.sa') %}
+
+    {% set display_name = 'Horyah Bukhari'
+       if contact|lower == 'horyah@iau.edu.sa'
+       else (
+           contact.split('@')[0]
+           .replace('.', ' ')
+           .replace('_', ' ')
+           .title()
+           if '@' in contact
+           else contact
+       )
+    %}
+
+    <section class="identity">
+
+        <div class="avatar">
+            {{ display_name[0]|upper if display_name else 'H' }}
+        </div>
+
+        <h2>{{ display_name }}</h2>
+
+        <p>{{ contact }}</p>
+
+    </section>
+
+    <nav class="menu">
+
+        <a
+            class="menu-item"
+            href="{{ url_for('my_reports') }}">
+
+            <span class="menu-icon">▤</span>
+            My Reports
+            <span class="arrow">›</span>
+
+        </a>
+
+        <button
+            class="menu-item"
+            type="button"
+            onclick="showNotice('Saved Locations will be available soon.')">
+
+            <span class="menu-icon">⌖</span>
+            Saved Locations
+            <span class="arrow">›</span>
+
+        </button>
+
+        <button
+            class="menu-item"
+            type="button"
+            onclick="showNotice('Notifications will be available soon.')">
+
+            <span class="menu-icon">♧</span>
+            Notifications
+            <span class="arrow">›</span>
+
+        </button>
+
+        <button
+            class="menu-item"
+            type="button"
+            onclick="showNotice('Please contact the LostMatch project team for support.')">
+
+            <span class="menu-icon">?</span>
+            Help &amp; Support
+            <span class="arrow">›</span>
+
+        </button>
+
+        <button
+            class="menu-item"
+            type="button"
+            onclick="showNotice('LostMatch is an HCI project prototype for reporting and matching lost and found items.')">
+
+            <span class="menu-icon">ⓘ</span>
+            About LostMatch
+            <span class="arrow">›</span>
+
+        </button>
+
+    </nav>
+
+    <div
+        id="notice"
+        class="notice"
+        role="status"
+        hidden>
+    </div>
+
+    <a
+        class="logout"
+        href="{{ url_for('logout') }}"
+        onclick="return confirm('Are you sure you want to log out?')">
+
+        <span>↪</span>
+        Log Out
+
+    </a>
+
+    <nav class="bottom-nav">
+
+        <a
+            class="nav-link"
+            href="{{ url_for('dashboard') }}">
+
+            <span class="nav-icon">⌂</span>
+            Home
+
+        </a>
+
+        <a
+            class="nav-link"
+            href="{{ url_for('my_reports') }}">
+
+            <span class="nav-icon">▤</span>
+            Reports
+
+        </a>
+
+        <a
+            class="nav-link"
+            href="{{ url_for('my_matches') }}">
+
+            <span class="nav-icon">◇</span>
+            Matches
+
+        </a>
+
+        <a
+            class="nav-link active"
+            href="{{ url_for('profile') }}"
+            aria-current="page">
+
+            <span class="nav-icon">◉</span>
+            Profile
+
+        </a>
+
+    </nav>
+
+</div>
+
+<script>
+    function showNotice(message) {
+        const notice = document.getElementById("notice");
+        notice.textContent = message;
+        notice.hidden = false;
+    }
+</script>
+
+</body>
+</html>

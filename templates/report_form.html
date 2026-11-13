@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LostMatch | Report Item</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f4fb;
+    color: #17132e;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    max-width: 100%;
+    min-height: 844px;
+    margin: 30px auto;
+    background: #fcfaff;
+    border: 3px solid #8b83a5;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
+.phone-notch {
+    width: 125px;
+    height: 30px;
+    background: #25212e;
+    border-radius: 25px;
+    margin: 12px auto 0;
+}
+
+.content {
+    padding: 22px 22px 35px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    font-size: 22px;
+    margin: 0;
+}
+
+.back {
+    position: absolute;
+    left: 0;
+    top: -8px;
+    font-size: 35px;
+    text-decoration: none;
+    color: #17132e;
+}
+
+.photo-upload {
+    border: 2px dashed #ba8ce8;
+    border-radius: 17px;
+    background: #f6edff;
+    min-height: 95px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    cursor: pointer;
+    color: #6326a4;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.photo-upload svg {
+    width: 42px;
+    height: 42px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.photo-upload input {
+    display: none;
+}
+
+.photo-preview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.photo-preview img {
+    width: 57px;
+    height: 57px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label,
+.field-title {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.required {
+    color: #e52b38;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid #dcd3eb;
+    border-radius: 13px;
+    background: white;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    color: #17132e;
+}
+
+.field textarea {
+    min-height: 65px;
+    resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: #8b35ca;
+    box-shadow: 0 0 0 3px #eee2fa;
+}
+
+.colors {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin: 15px 0 20px;
+}
+
+.color-option {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ded6ea;
+    cursor: pointer;
+    position: relative;
+}
+
+.color-option.selected {
+    outline: 3px solid #8d3bca;
+    outline-offset: 3px;
+}
+
+.submit {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    background: linear-gradient(180deg,#a45bd6,#61249c);
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.submit:hover {
+    background: #753ab5;
+}
+
+.message {
+    background: #f1e6fb;
+    color: #61249c;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+@media (max-width:430px) {
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="phone-notch"></div>
+
+<main class="content">
+
+<header class="header">
+    <a class="back"
+       href="{{ url_for('select_category', type=report_type) }}"
+       aria-label="Back to categories">‹</a>
+
+    <h1>
+        Report {{ 'Lost' if report_type == 'lost' else 'Found' }} Item
+    </h1>
+</header>
+
+<form id="reportForm"
+      action="{{ url_for('report_form', type=report_type, category=category) }}"
+      method="POST"
+      enctype="multipart/form-data">
+
+    <!-- Photos -->
+    <label class="photo-upload" for="photos">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 7h4l2-3h6l2 3h4v13H3z"/>
+            <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span>Add Photos<br>(up to 5)</span>
+
+        <input id="photos"
+               name="photos"
+               type="file"
+               accept="image/*"
+               multiple>
+    </label>
+
+    <div class="photo-preview" id="photoPreview"></div>
+
+    <!-- Item Name -->
+    <div class="field">
+        <label for="itemName">
+            Item Name <span class="required">*</span>
+        </label>
+        <input id="itemName"
+               name="item_name"
+               placeholder="e.g., Laptop"
+               required>
+    </div>
+
+    <!-- Category -->
+    <div class="field">
+        <label for="category">
+            Category <span class="required">*</span>
+        </label>
+
+        <select id="category" name="category" required>
+            <option value="Electronics">Electronics</option>
+            <option value="Bags & Wallets">Bags &amp; Wallets</option>
+            <option value="IDs & Cards">IDs &amp; Cards</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Books & Stationery">Books &amp; Stationery</option>
+            <option value="Keys">Keys</option>
+            <option value="Mugs">Mugs</option>
+            <option value="Others">Others</option>
+        </select>
+    </div>
+
+    <!-- Color -->
+    <div class="field">
+        <span class="field-title">Color</span>
+
+        <div class="colors">
+            <button type="button"
+                    class="color-option"
+                    style="background:#fff"
+                    data-color="White"
+                    aria-label="White"></button>
+
+            <button type="button"
+                    class="color-option"
+                    style="background:#333"
+                    data-color="Black"
+                    aria-label="Black"></button>
+
+            <button type="button"
+                    class="color-option"
+                    style="background:#914ee4"
+                    data-color="Purple"
+                    aria-label="Purple"></button>
+
+            <button type="button"
+                    class="color-option"
+                    style="background:#93c5fd"
+                    data-color="Blue"
+                    aria-label="Blue"></button>
+
+            <button type="button"
+                    class="color-option"
+                    style="background:#f7a6bf"
+                    data-color="Pink"
+                    aria-label="Pink"></button>
+        </div>
+
+        <input type="hidden"
+               id="selectedColor"
+               name="color">
+    </div>
+
+    <!-- Location -->
+    <div class="field">
+        <label for="location">
+            {{ 'Last Seen Location' if report_type == 'lost' else 'Found Location' }}
+            <span class="required">*</span>
+        </label>
+
+        <input id="location"
+               name="location"
+               placeholder="e.g., Al Jubail Mall"
+               required>
+    </div>
+
+    <!-- Date -->
+    <div class="field">
+        <label for="reportDate">
+            {{ 'Date Lost' if report_type == 'lost' else 'Date Found' }}
+            <span class="required">*</span>
+        </label>
+
+        <input id="reportDate"
+               name="report_date"
+               type="date"
+               required>
+    </div>
+
+    <!-- Description -->
+    <div class="field">
+        <label for="description">Description</label>
+
+        <textarea id="description"
+                  name="description"
+                  placeholder="e.g., A silver laptop with a sticker..."></textarea>
+    </div>
+
+    <div id="formMessage" class="message" hidden></div>
+
+    <button type="submit" class="submit">
+        Submit Report
+    </button>
+
+</form>
+</main>
+
+<script id="categoryData" type="application/json">
+    {{ category | tojson }}
+</script>
+
+</div>
+
+<script>
+const selectedCategory = JSON.parse(
+    document.getElementById("categoryData").textContent
+);
+
+// Set category selected from previous page
+document.getElementById("category").value = selectedCategory;
+
+// Color selection
+document.querySelectorAll(".color-option").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".color-option").forEach(
+            item => item.classList.remove("selected")
+        );
+
+        button.classList.add("selected");
+
+        document.getElementById("selectedColor").value =
+            button.dataset.color;
+    });
+});
+
+// Photo preview (up to 5)
+const photos = document.getElementById("photos");
+const preview = document.getElementById("photoPreview");
+
+photos.addEventListener("change", () => {
+    preview.innerHTML = "";
+
+    if (photos.files.length > 5) {
+        alert("You can upload up to 5 photos only.");
+        photos.value = "";
+        return;
+    }
+
+    Array.from(photos.files).forEach(file => {
+        const image = document.createElement("img");
+        image.src = URL.createObjectURL(file);
+
+        image.onload = () => {
+            URL.revokeObjectURL(image.src);
+        };
+
+        preview.appendChild(image);
+    });
+});
+
+// Allow real form submission to Flask
+document.getElementById("reportForm").addEventListener("submit", e => {
+    if (photos.files.length > 5) {
+        e.preventDefault();
+        alert("You can upload up to 5 photos only.");
+    }
+});
+</script>
+
+</body>
+</html>

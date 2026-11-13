@@ -1,0 +1,7 @@
+
+lostmatch.db
+*.db
+.env
+__pycache__/
+*.pyc
+static/uploads/
